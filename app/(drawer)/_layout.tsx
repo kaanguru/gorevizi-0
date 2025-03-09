@@ -1,39 +1,29 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
-import { Drawer } from 'expo-router/drawer';
+// app\(drawer)\_layout.tsx
+import { Redirect } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
-import { HeaderButton } from '../../components/HeaderButton';
+import DrawerMenuAndScreens from '~/components/DrawerMenuAndScreens';
+import { useInitializationContext } from '~/components/GluestackModeWrapper';
+import { useSessionContext } from '~/context/AuthenticationContext';
 
-const DrawerLayout = () => {
-  return (
-    <Drawer>
-      <Drawer.Screen
-        name="index"
-        options={{
-          headerTitle: 'Home',
-          drawerLabel: 'Home',
-          drawerIcon: ({ size, color }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="(tabs)"
-        options={{
-          headerTitle: 'Tabs',
-          drawerLabel: 'Tabs',
-          drawerIcon: ({ size, color }) => (
-            <MaterialIcons name="border-bottom" size={size} color={color} />
-          ),
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <HeaderButton />
-            </Link>
-          ),
-        }}
-      />
-    </Drawer>
-  );
-};
+export default function DrawerLayout() {
+  const { session, isLoading } = useSessionContext();
+  const { initialized } = useInitializationContext(); // Use the context
 
-export default DrawerLayout;
+  console.log('Is Hermes running?', typeof HermesInternal);
+
+  if (isLoading || !initialized) {
+    return (
+      <View className="flex-1 justify-center">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!session) {
+    return <Redirect href="/login" />;
+  }
+
+  return <DrawerMenuAndScreens />;
+}
