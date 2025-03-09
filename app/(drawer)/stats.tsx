@@ -1,17 +1,11 @@
+import { Card, Text, LinearProgress } from '@rneui/themed';
 import React, { useMemo } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 
-import { Tables } from '@/database.types';
-
+import TaskSuccessPercentage from '~/components/TaskSuccessPercentage';
 import Happy from '~/components/lotties/Happy';
 import Healthy from '~/components/lotties/Healthy';
-import TaskSuccessPercentage from '~/components/TaskSuccessPercentage';
-import { Box } from '~/components/ui/box';
-import { Card } from '~/components/ui/card';
-import { Divider } from '~/components/ui/divider';
-import { HStack } from '~/components/ui/hstack';
-import { Progress, ProgressFilledTrack } from '~/components/ui/progress';
-import { Text } from '~/components/ui/text';
+import { Tables } from '~/database.types';
 import useHealthAndHappinessQuery from '~/hooks/useHealthAndHappinessQueries';
 import useTasksQuery from '~/hooks/useTasksQueries';
 import useUser from '~/hooks/useUser';
@@ -46,9 +40,9 @@ export default function Stats() {
 
   if (isLoading || isLoadingHealthAndHappiness) {
     return (
-      <Box className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" />
-      </Box>
+      </View>
     );
   }
 
@@ -65,49 +59,41 @@ export default function Stats() {
   );
 
   return (
-    <View className="flex-1 justify-evenly bg-background-light dark:bg-background-dark">
-      <Text
-        size="2xl"
-        className="text-center font-delaGothicOne text-typography-black dark:text-typography-white">
+    <View className="bg-background-light dark:bg-background-dark flex-1 justify-evenly">
+      <Text className="font-delaGothicOne text-typography-black dark:text-typography-white text-center text-2xl">
         Level {level}
       </Text>
-      <Box className="m-2 flex-1 items-center justify-center pb-3">
-        <Progress value={Number(untilNext.toFixed(2))} size="md" orientation="horizontal">
-          <ProgressFilledTrack />
-        </Progress>
-      </Box>
-      <HStack className="basis-6/6 justify-evenly">
-        <Card className="m-1 w-2/6 rounded-lg bg-[#1982C4] p-2">
+      <View className="m-2 flex-1 items-center justify-center pb-3">
+        <LinearProgress value={Number(untilNext.toFixed(2))} />
+      </View>
+      <View className="basis-6/6 justify-evenly">
+        <Card>
           <Healthy height={100} width={120} />
-          <Text
-            size="md"
-            className="justify-between text-center text-typography-white dark:text-typography-black">
+          <Text className="text-typography-white dark:text-typography-black justify-between text-center">
             Health
           </Text>
-          <Divider
+          <Card.Divider
             orientation="horizontal"
-            className="my-2 flex w-full self-center bg-background-500"
+            className="bg-background-500 my-2 flex w-full self-center"
           />
-          <Text bold size="4xl" className="p-3 text-center font-mono text-[#FFCA3A]">
+          <Text className="p-3 text-center font-mono text-3xl text-[#FFCA3A]">
             {healthAndHappiness?.health || 0}
           </Text>
         </Card>
-        <Card className="m-1 w-2/6 rounded-lg bg-[#4F10A8] p-2">
+        <Card>
           <Happy height={100} width={120} />
-          <Text
-            size="md"
-            className="justify-between text-center text-typography-white dark:text-typography-black">
+          <Text className="text-typography-white dark:text-typography-black justify-between text-center">
             Happiness
           </Text>
-          <Divider
+          <Card.Divider
             orientation="horizontal"
-            className="my-2 flex w-full self-center bg-background-500"
+            className="bg-background-500 my-2 flex w-full self-center"
           />
-          <Text bold size="4xl" className="p-3 text-center font-mono text-[#FFCA3A]">
+          <Text className="p-3 text-center font-mono text-4xl text-[#FFCA3A]">
             {healthAndHappiness?.happiness || 0}
           </Text>
         </Card>
-      </HStack>
+      </View>
       <FlatList
         contentContainerStyle={{
           gap: 8,

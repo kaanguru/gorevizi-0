@@ -1,10 +1,9 @@
 // app\(drawer)\_layout.tsx
 import { Redirect } from 'expo-router';
-import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 import DrawerMenuAndScreens from '~/components/DrawerMenuAndScreens';
-import { useInitializationContext } from '~/components/GluestackModeWrapper';
+import { useInitializationContext } from '~/components/RNEWrapper';
 import { useSessionContext } from '~/context/AuthenticationContext';
 
 export default function DrawerLayout() {

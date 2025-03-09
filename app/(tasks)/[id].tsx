@@ -1,20 +1,12 @@
 import { FontAwesome6, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Badge, Alert } from '@rneui/themed';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
 import Header from '~/components/Header';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogBody,
-  AlertDialogBackdrop,
-  AlertDialogHeader,
-} from '~/components/ui/alert-dialog';
-import { Badge } from '~/components/ui/badge';
+import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
 import { Box } from '~/components/ui/box';
 import { Button, ButtonText } from '~/components/ui/button';
 import { Card } from '~/components/ui/card';
@@ -22,13 +14,15 @@ import { Checkbox, CheckboxIndicator, CheckboxLabel, CheckboxIcon } from '~/comp
 import { Divider } from '~/components/ui/divider';
 import { HStack } from '~/components/ui/hstack';
 import { Pressable } from '~/components/ui/pressable';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
 import { VStack } from '~/components/ui/vstack';
 import useChecklistItemMutations from '~/hooks/useCheckListMutations';
 import useChecklistItemsQuery from '~/hooks/useCheckListQueries';
 import { useDeleteTask, useToggleComplete } from '~/hooks/useTasksMutations';
 import { useTaskById } from '~/hooks/useTasksQueries';
 import getRepeatPeriodLabel from '~/utils/getRepeatPeriodLabel';
+
+import { useDeleteTask, useToggleComplete } from '~/hooks/useTasksMutations';
+import { useTaskById } from '~/hooks/useTasksQueries';
 
 export default function TaskDetailPage() {
   const router = useRouter();
@@ -52,7 +46,7 @@ export default function TaskDetailPage() {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch]),
+    }, [refetch])
   );
 
   const handleToggleComplete = () => {
@@ -89,7 +83,7 @@ export default function TaskDetailPage() {
     router.push('/(drawer)');
   };
   return (
-    <ScrollView className=" flex-1 bg-background-light dark:bg-background-dark">
+    <ScrollView className=" bg-background-light dark:bg-background-dark flex-1">
       <VStack space="sm" className="flex-1 ">
         <Header headerTitle="" />
         <HStack className="-mt-12 me-5 justify-end">
@@ -106,7 +100,7 @@ export default function TaskDetailPage() {
           <AlertDialog isOpen={showAlertDialog} onClose={handleClose}>
             <AlertDialogBackdrop />
             <AlertDialogContent className="w-full max-w-[415px] items-center gap-4">
-              <Box className="h-[52px] w-[52px] items-center justify-center rounded-full bg-background-error">
+              <Box className="bg-background-error h-[52px] w-[52px] items-center justify-center rounded-full">
                 <Ionicons
                   name="trash-bin"
                   size={24}
@@ -141,12 +135,12 @@ export default function TaskDetailPage() {
             </AlertDialogContent>
           </AlertDialog>
         </HStack>
-        <Card className="mx-5 mt-4 bg-background-dark text-typography-white dark:bg-background-light dark:text-typography-black">
-          <Text className=" justify-self-center p-4 text-center text-2xl text-typography-white dark:text-typography-black">
+        <Card className="bg-background-dark text-typography-white dark:bg-background-light dark:text-typography-black mx-5 mt-4">
+          <Text className=" text-typography-white dark:text-typography-black justify-self-center p-4 text-center text-2xl">
             {task.title}
           </Text>
           {task.notes && (
-            <Box className="rounded-sm bg-background-light p-3">
+            <Box className="bg-background-light rounded-sm p-3">
               <Markdown>{task.notes}</Markdown>
             </Box>
           )}
@@ -161,7 +155,7 @@ export default function TaskDetailPage() {
                 size="lg"
                 isChecked={task.is_complete}
                 onChange={handleToggleComplete}
-                className="mx-auto rounded-md bg-background-light p-2 dark:bg-background-dark"
+                className="bg-background-light dark:bg-background-dark mx-auto rounded-md p-2"
                 value="is_complete">
                 <CheckboxLabel>{task.is_complete ? 'Completed' : 'Not Completed'}</CheckboxLabel>
                 <CheckboxIndicator>
@@ -173,7 +167,7 @@ export default function TaskDetailPage() {
             )}
           </VStack>
           {!task.repeat_period && (
-            <Text className="text-center text-typography-white dark:text-typography-black">
+            <Text className="text-typography-white dark:text-typography-black text-center">
               It is not a repeating task
             </Text>
           )}
@@ -215,9 +209,7 @@ export default function TaskDetailPage() {
         {checklistItems && checklistItems.length > 0 ? (
           <VStack className="m-3 flex-col p-4" space="xl">
             <HStack>
-              <Image source="~/assets/waypoints.png" style={{ width: 24, height: 24 }} />
-
-              <Text className="pb-2 text-lg text-typography-black dark:text-typography-white">
+              <Text className="text-typography-black dark:text-typography-white pb-2 text-lg">
                 Routine Steps
               </Text>
             </HStack>
@@ -232,7 +224,7 @@ export default function TaskDetailPage() {
                       is_complete: !item.is_complete,
                     })
                   }>
-                  <CheckboxIndicator size="lg" className="h-8 w-8"></CheckboxIndicator>
+                  <CheckboxIndicator size="lg" className="h-8 w-8" />
                   <CheckboxLabel className="ms-3">{item.content}</CheckboxLabel>
                 </Checkbox>
               </Box>
@@ -240,7 +232,7 @@ export default function TaskDetailPage() {
             <Divider />
           </VStack>
         ) : (
-          <Text className="text-muted p-4 text-center dark:text-typography-white">
+          <Text className="text-muted dark:text-typography-white p-4 text-center">
             No Routines found. Edit Task to add some
           </Text>
         )}

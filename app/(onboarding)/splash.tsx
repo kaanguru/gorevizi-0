@@ -1,10 +1,9 @@
+import { Text } from '@rneui/themed';
 import { Href, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
+import { Pressable, View } from 'react-native';
 
 import LogoPortrait from '~/components/lotties/LogoPortrait';
-import { Box } from '~/components/ui/box';
-import { Pressable } from '~/components/ui/pressable';
-import { Text } from '~/components/ui/text';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -18,13 +17,11 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <Box className="flex-1 items-center justify-center bg-background-0">
+    <View className="bg-background-0 flex-1 items-center justify-center">
       <Pressable onPress={() => router.replace('/(onboarding)/tutorial' as Href)}>
         <LogoPortrait />
       </Pressable>
-      <Text size="5xl" className="m-3 p-3 font-delaGothicOne">
-        GorevIzi
-      </Text>
-    </Box>
+      <Text className="font-delaGothicOne m-3 p-3 text-5xl">GorevIzi</Text>
+    </View>
   );
 }

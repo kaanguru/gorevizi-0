@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@rneui/themed';
 import * as Sentry from '@sentry/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { isRunningInExpoGo } from 'expo';
@@ -7,9 +8,25 @@ import { View } from 'react-native';
 
 import '@/global.css';
 
-import GluestackModeWrapper from '~/components/GluestackModeWrapper';
-import ThemeProvider from '~/components/ui/ThemeProvider/ThemeProvider';
+import RNEWrapper from '~/components/RNEWrapper';
 import SessionProvider from '~/context/AuthenticationContext';
+
+const theme = createTheme({
+  lightColors: {
+    primary: '#ff006e',
+    success: '#8AC926',
+    white: '#FFFAEB',
+    black: '#00173D',
+    background: '#FFFAEB',
+  },
+  darkColors: {
+    primary: '#ff117e',
+    success: '#9AD936',
+    white: '#00173D',
+    black: '#FFFAEB',
+    background: '#051824',
+  },
+});
 
 const navigationIntegration = Sentry.reactNavigationIntegration({
   enableTimeToInitialDisplay: !isRunningInExpoGo(),
@@ -38,10 +55,10 @@ export default function RootLayout() {
   }, [refNav]);
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
         {isNavigationReady ? (
           <SessionProvider>
-            <GluestackModeWrapper />
+            <RNEWrapper />
           </SessionProvider>
         ) : (
           <View style={{ flex: 1, backgroundColor: '#FFFAEB' }} />

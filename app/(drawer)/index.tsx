@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useThemeMode, FAB } from '@rneui/themed';
 import { Stack, useFocusEffect, useRouter } from 'expo-router';
 import * as R from 'ramda';
 import React, { useCallback, useState, useEffect } from 'react';
@@ -7,9 +9,6 @@ import { ActivityIndicator, Pressable, View } from 'react-native';
 import { TaskItem } from '~/components/DraggableTaskItem';
 import TaskListDisplay from '~/components/TaskListDisplay';
 import Confetti from '~/components/lotties/Confetti';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
-import { Box } from '~/components/ui/box';
-import { Fab } from '~/components/ui/fab';
 import { useSoundContext } from '~/context/SoundContext';
 import useFilteredTasks from '~/hooks/useFilteredTasks';
 import { useUpdateHealthAndHappiness } from '~/hooks/useHealthAndHappinessMutations';
@@ -28,7 +27,7 @@ export default function Index() {
   const [isFiltered, setIsFiltered] = useState<boolean>(true);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const { isSoundEnabled } = useSoundContext();
-  const { theme } = useTheme();
+  const { mode } = useThemeMode();
 
   const router = useRouter();
   const { data: tasks = [], isLoading, isRefetching, refetch } = useTasksQueries('not-completed');
@@ -124,11 +123,11 @@ export default function Index() {
         options={{
           title: 'Due Tasks',
           headerStyle: {
-            backgroundColor: theme === 'dark' ? '#051824' : '#FFFAEB',
+            backgroundColor: mode === 'dark' ? '#051824' : '#FFFAEB',
           },
-          headerTintColor: theme === 'dark' ? '#FFFAEB' : '#051824',
+          headerTintColor: mode === 'dark' ? '#FFFAEB' : '#051824',
           headerTitleStyle: {
-            color: theme === 'dark' ? '#FFFAEB' : '#051824',
+            color: mode === 'dark' ? '#FFFAEB' : '#051824',
             fontFamily: 'DelaGothicOne_400Regular',
             fontSize: 14,
             fontWeight: '400',
@@ -141,13 +140,13 @@ export default function Index() {
                     <FontAwesome6
                       name="calendar-days"
                       size={18}
-                      color={theme === 'dark' ? '#FFFAEB' : '#051824'}
+                      color={mode === 'dark' ? '#FFFAEB' : '#051824'}
                     />
                   ) : (
                     <FontAwesome6
                       name="eye"
                       size={18}
-                      color={theme === 'dark' ? '#FFFAEB' : '#051824'}
+                      color={mode === 'dark' ? '#FFFAEB' : '#051824'}
                     />
                   )}
                 </Pressable>
@@ -158,9 +157,9 @@ export default function Index() {
       />
       <View className="bg-background-light dark:bg-background-dark  flex-1 p-5">
         {showLoading ? (
-          <Box className="flex-1 items-center justify-center">
+          <View className="flex-1 items-center justify-center">
             {showConfetti ? <Confetti /> : <ActivityIndicator size="large" />}
-          </Box>
+          </View>
         ) : (
           <>
             <TaskListDisplay
@@ -173,8 +172,7 @@ export default function Index() {
             />
           </>
         )}
-        <Fab
-          size="lg"
+        <FAB
           className="absolute bottom-5 right-5 "
           onPress={() => {
             if (tasks.filter(isTaskDueToday).length > 8) {
@@ -184,7 +182,7 @@ export default function Index() {
             }
           }}>
           <FontAwesome6 name="add" size={24} color="#ff006e" />
-        </Fab>
+        </FAB>
       </View>
     </>
   );

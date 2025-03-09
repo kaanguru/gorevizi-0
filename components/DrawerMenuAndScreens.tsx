@@ -1,27 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Drawer from 'expo-router/drawer';
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
 
 import { useAuth } from '~/utils/auth/auth';
 
 export default function DrawerMenuAndScreens() {
   const { signOut } = useAuth();
-  const [error, setError] = useState<Error | null>(null);
 
   const handleSignOut = async () => {
     await signOut();
     router.replace('/login');
   };
-
-  if (error) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <Text className="text-red-500">An error occurred: {error.message}</Text>
-      </View>
-    );
-  }
 
   return (
     <Drawer

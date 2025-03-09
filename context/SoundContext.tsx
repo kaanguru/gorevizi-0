@@ -46,7 +46,6 @@ export const SoundProvider = ({ children }: Readonly<{ children: React.ReactNode
 export const useSoundContext = () => {
   const context = useContext(SoundContext);
   if (!context) {
-    // eslint-disable-next-line functional/no-throw-statements
     throw new Error('useSoundContext must be used within a SoundProvider');
   }
   return context;

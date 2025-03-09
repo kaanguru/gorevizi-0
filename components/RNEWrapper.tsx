@@ -1,4 +1,3 @@
-// components/GluestackModeWrapper.tsx
 import { DelaGothicOne_400Regular, useFonts } from '@expo-google-fonts/dela-gothic-one';
 import { Inter_900Black } from '@expo-google-fonts/inter';
 import { Ubuntu_400Regular, Ubuntu_500Medium, Ubuntu_700Bold } from '@expo-google-fonts/ubuntu';
@@ -9,8 +8,6 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { GluestackUIProvider } from '~/components/ui/gluestack-ui-provider';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
 import { useSessionContext } from '~/context/AuthenticationContext';
 import { SoundProvider } from '~/context/SoundContext';
 import useInitializeDailyTasks from '~/hooks/useInitializeDailyTasks';
@@ -30,9 +27,11 @@ const InitializationContext = createContext<
 
 export const useInitializationContext = () => useContext(InitializationContext);
 SplashScreen.preventAutoHideAsync();
-
-export default function GluestackModeWrapper() {
-  const { theme } = useTheme();
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
+export default function RNEWrapper() {
   const [fontsLoaded, fontError] = useFonts({
     Inter_900Black,
     DelaGothicOne_400Regular,
@@ -51,6 +50,7 @@ export default function GluestackModeWrapper() {
   useEffect(() => {
     const initializeSupabase = async () => {
       try {
+        // eslint-disable-next-line no-unused-expressions
         supabase; // Ensure supabase is initialized
         setSupabaseInitialized(true);
       } catch (error) {
@@ -123,26 +123,24 @@ export default function GluestackModeWrapper() {
 
   return (
     <InitializationContext.Provider value={{ initialized, hasTasksFromYesterday }}>
-      <GluestackUIProvider mode={theme}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SoundProvider>
-            <Stack
-              screenOptions={{
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SoundProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}>
+            <Stack.Screen name="(drawer)" />
+            <Stack.Screen
+              name="(onboarding)"
+              options={{
                 headerShown: false,
                 animation: 'slide_from_right',
-              }}>
-              <Stack.Screen name="(drawer)" />
-              <Stack.Screen
-                name="(onboarding)"
-                options={{
-                  headerShown: false,
-                  animation: 'slide_from_right',
-                }}
-              />
-            </Stack>
-          </SoundProvider>
-        </GestureHandlerRootView>
-      </GluestackUIProvider>
+              }}
+            />
+          </Stack>
+        </SoundProvider>
+      </GestureHandlerRootView>
     </InitializationContext.Provider>
   );
 }
