@@ -1,0 +1,40 @@
+{
+  "cesVersion": "2.14.1",
+  "projectName": "gorevizi-0",
+  "packages": [
+    {
+      "name": "expo-router",
+      "type": "navigation",
+      "options": {
+        "type": "drawer + tabs"
+      }
+    },
+    {
+      "name": "nativewind",
+      "type": "styling"
+    },
+    {
+      "name": "supabase",
+      "type": "authentication"
+    }
+  ],
+  "flags": {
+    "noGit": false,
+    "noInstall": false,
+    "overwrite": false,
+    "importAlias": true,
+    "packageManager": "pnpm",
+    "eas": false,
+    "publish": false
+  },
+  "packageManager": {
+    "type": "pnpm",
+    "version": "10.6.1"
+  },
+  "os": {
+    "type": "Windows_NT",
+    "platform": "win32",
+    "arch": "x64",
+    "kernelVersion": "10.0.26100"
+  }
+}
