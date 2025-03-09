@@ -21,9 +21,6 @@ import { useDeleteTask, useToggleComplete } from '~/hooks/useTasksMutations';
 import { useTaskById } from '~/hooks/useTasksQueries';
 import getRepeatPeriodLabel from '~/utils/getRepeatPeriodLabel';
 
-import { useDeleteTask, useToggleComplete } from '~/hooks/useTasksMutations';
-import { useTaskById } from '~/hooks/useTasksQueries';
-
 export default function TaskDetailPage() {
   const router = useRouter();
   const { id: taskID } = useLocalSearchParams<{ id: string }>();
