@@ -1,10 +1,9 @@
+import { Button } from '@rneui/themed';
 import { FlashList } from '@shopify/flash-list';
 import { Video, ResizeMode } from 'expo-av';
 import { Href, useRouter } from 'expo-router';
 import { useState, useRef } from 'react';
-import { View, Text, Dimensions, Pressable } from 'react-native';
-
-import { Button, ButtonText } from '~/components/ui/button';
+import { View, Text, Dimensions } from 'react-native';
 
 interface TutorialItem {
   id: number;
@@ -64,7 +63,7 @@ export default function TutorialScreen() {
   };
 
   return (
-    <View className="flex-1 bg-background-light dark:bg-background-dark">
+    <View className="bg-background-light dark:bg-background-dark flex-1">
       <View className="flex-1">
         <FlashList
           ref={flashListRef}
@@ -94,16 +93,11 @@ export default function TutorialScreen() {
             />
           ))}
         </View>
-
         <Button
-          variant="outline"
-          size="md"
           onPress={handleContinue}
-          className="bg-background-light dark:bg-background-dark">
-          <ButtonText className="text-typography-gray">
-            {currentIndex === tutorials.length - 1 ? 'Get Started' : 'Continue'}
-          </ButtonText>
-        </Button>
+          className="bg-background-light dark:bg-background-dark"
+          title={currentIndex === tutorials.length - 1 ? 'Get Started' : 'Continue'}
+        />
       </View>
     </View>
   );

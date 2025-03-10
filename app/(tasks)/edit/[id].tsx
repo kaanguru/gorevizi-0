@@ -1,21 +1,16 @@
 // app/(tasks)/edit/[id].tsx
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button, CheckBox } from '@rneui/themed';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, View, Text } from 'react-native';
 
 import ChecklistSection from '~/components/ChecklistSection';
 import { FormInput } from '~/components/FormInput';
 import Header from '~/components/Header';
 import { RepeatFrequencySlider } from '~/components/RepeatFrequencySlider';
 import RepeatPeriodSelector from '~/components/RepeatPeriodSelector';
-import { Box } from '~/components/ui/box';
-import { Button, ButtonText } from '~/components/ui/button';
-import { Checkbox, CheckboxIndicator, CheckboxLabel } from '~/components/ui/checkbox';
-import { HStack } from '~/components/ui/hstack';
-import { Text } from '~/components/ui/text';
-import { VStack } from '~/components/ui/vstack';
 import WeekdaySelector from '~/components/WeekDaySelector';
 import useChecklistItemMutations from '~/hooks/useCheckListMutations';
 import useChecklistItems from '~/hooks/useCheckListQueries';
@@ -29,7 +24,7 @@ const EditTask = () => {
   const { id: taskID } = useLocalSearchParams<{ id: string }>();
   const { checkListItems, isCheckListItemsLoading, isCheckListItemsError } =
     useChecklistItems(taskID);
-  const { data: theTask, isLoading, isError } = useTaskById(taskID);
+  const { data: theTask, isLoading } = useTaskById(taskID);
   const updateTaskMutation = useUpdateTask();
   const deleteTaskMutation = useDeleteTask();
   const { updateChecklistItem } = useChecklistItemMutations(taskID);
@@ -50,7 +45,7 @@ const EditTask = () => {
   // Memoize the loading state to prevent unnecessary re-renders
   const loading = useMemo(
     () => initialLoad || isLoading || isCheckListItemsLoading,
-    [initialLoad, isLoading, isCheckListItemsLoading],
+    [initialLoad, isLoading, isCheckListItemsLoading]
   );
 
   useEffect(() => {
@@ -132,25 +127,25 @@ const EditTask = () => {
     setFormData((prev) => ({
       ...prev,
       checklistItems: prev.checklistItems.map((item, i) =>
-        i === index ? { ...item, content } : item,
+        i === index ? { ...item, content } : item
       ),
     }));
   };
 
   if (loading) {
     return (
-      <Box className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" />
-      </Box>
+      </View>
     );
   }
 
   return (
-    <VStack space="md" className="flex-1  bg-background-light dark:bg-background-dark">
+    <View className="bg-background-light  dark:bg-background-dark flex-1">
       <Header headerTitle={formData.title} />
       <ScrollView className="my-4 pb-6">
-        <Box className="flex-1  p-4">
-          <VStack space="md">
+        <View className="flex-1  p-4">
+          <View>
             <FormInput
               title={formData.title}
               notes={formData.notes}
@@ -174,8 +169,8 @@ const EditTask = () => {
             )}
 
             {formData.repeatPeriod === 'Weekly' && (
-              <Box className="mt-4 p-2">
-                <HStack space="md" className="mb-4">
+              <View className="mt-4 p-2">
+                <View className="mb-4 flex-row space-x-4">
                   <Text className="w-1/6">Repeat Every</Text>
                   <RepeatFrequencySlider
                     period={formData.repeatPeriod}
@@ -184,10 +179,11 @@ const EditTask = () => {
                       setFormData((prev) => ({ ...prev, repeatFrequency: value }))
                     }
                   />
-                </HStack>
-                <HStack space="md">
+                </View>
+
+                <View className="mb-4 flex-row space-x-4">
                   <Text className="mb-2">Repeat on</Text>
-                </HStack>
+                </View>
                 <WeekdaySelector
                   selectedDays={formData.repeatOnWk}
                   onDayToggle={(day, isSelected) => {
@@ -199,45 +195,40 @@ const EditTask = () => {
                     }));
                   }}
                 />
-              </Box>
+              </View>
             )}
 
             {formData.repeatPeriod === 'Yearly' && (
-              <Box className="mt-4">
-                <HStack space="md">
+              <View className="mt-4">
+                <View className="mb-4 flex-row space-x-4">
                   <Text>Repeat Every Year</Text>
-                </HStack>
-              </Box>
+                </View>
+              </View>
             )}
 
-            <Box className="mt-4">
-              <HStack space="md" className="items-center">
-                <Checkbox
-                  value="custom-start-date"
-                  isChecked={formData.isCustomStartDateEnabled}
-                  onChange={(isSelected: boolean) => {
+            <View className="mt-4">
+              <View className="mb-4 flex-row space-x-4">
+                <CheckBox
+                  checked={formData.isCustomStartDateEnabled}
+                  title="Custom Start Date"
+                  onPress={() => {
                     setFormData((prev) => ({
                       ...prev,
-                      isCustomStartDateEnabled: isSelected,
-                      customStartDate: isSelected ? new Date() : null,
+                      isCustomStartDateEnabled: !prev.isCustomStartDateEnabled,
                     }));
-                  }}>
-                  <CheckboxIndicator></CheckboxIndicator>
-                  <CheckboxLabel>Custom Start Date</CheckboxLabel>
-                </Checkbox>
-              </HStack>
-            </Box>
+                  }}
+                />
+              </View>
+            </View>
 
             {formData.isCustomStartDateEnabled && (
-              <Box className="mt-4">
-                <HStack space="xl">
-                  <Text className="my-auto text-typography-black">Start Date</Text>
+              <View className="mt-4">
+                <View className="mb-4 flex-row space-x-4">
+                  <Text className="text-typography-black my-auto">Start Date</Text>
                   <Text className="my-auto">{formData.customStartDate?.toDateString()}</Text>
-                  <Button size="xs" variant="outline" onPress={() => setShowDatePicker(true)}>
-                    <ButtonText>Change Date</ButtonText>
-                  </Button>
-                </HStack>
-              </Box>
+                  <Button title="Change Date" onPress={() => setShowDatePicker(true)} />
+                </View>
+              </View>
             )}
 
             {showDatePicker && (
@@ -264,28 +255,21 @@ const EditTask = () => {
                 setFormData={setFormData}
               />
             )}
-          </VStack>
-        </Box>
+          </View>
+        </View>
       </ScrollView>
-      <HStack space="md" className="mx-5 justify-between">
-        <Button
-          size="md"
-          variant="solid"
-          action="negative"
-          onPress={handleDelete}
-          className="flex-1">
-          <ButtonText className="text-destructive-500">Delete</ButtonText>
-          <Ionicons name="trash-bin" size={24} color="white" />
-        </Button>
+      <View className="mx-5 mb-4 flex-row justify-between space-x-4">
+        <Button onPress={handleDelete} className="flex-1" title="Delete" />
+        <Ionicons name="trash-bin" size={24} color="white" />
         <Button
           onPress={handleSave}
           testID="save-task-button"
           className="flex-1"
-          disabled={updateTaskMutation.isPending}>
-          <ButtonText>{updateTaskMutation.isPending ? 'Saving...' : 'Save'}</ButtonText>
-        </Button>
-      </HStack>
-    </VStack>
+          disabled={updateTaskMutation.isPending}
+          title={updateTaskMutation.isPending ? 'Saving...' : 'Save'}
+        />
+      </View>
+    </View>
   );
 };
 
