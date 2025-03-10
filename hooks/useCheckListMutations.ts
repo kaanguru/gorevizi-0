@@ -1,5 +1,3 @@
-// hooks/useCheckListMutations.ts
-/* eslint-disable functional/prefer-immutable-types */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert } from 'react-native';
 
@@ -80,8 +78,6 @@ export default function useChecklistItemMutations(taskID: number | string) {
 
         if (insertError) throw new Error('Failed to update checklist items');
       }
-
-      return;
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({

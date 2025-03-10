@@ -1,13 +1,12 @@
 import { FontAwesome6 } from '@expo/vector-icons';
+import { Button, useThemeMode } from '@rneui/themed';
 import { useState, useEffect, useCallback } from 'react';
+import { View } from 'react-native';
 
 import DraggableItem from '~/components/DraggableItem';
-import { Button, ButtonText } from '~/components/ui/button';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
-import { VStack } from '~/components/ui/vstack';
 import { TaskFormData } from '~/types';
 
-const ChecklistSection = ({
+export default function ChecklistSection({
   items,
   onAdd,
   onRemove,
@@ -19,10 +18,11 @@ const ChecklistSection = ({
   onRemove: (index: number) => void;
   onUpdate: (index: number, content: string) => void;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-}>) => {
+}>) {
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [positions, setPositions] = useState<number[]>([]);
-  const { theme } = useTheme();
+  const { mode } = useThemeMode();
+
   const ITEM_HEIGHT = 42;
 
   useEffect(() => {
@@ -41,9 +41,7 @@ const ChecklistSection = ({
       if (validIndex !== index) {
         setFormData((prev) => {
           const newItems = [...prev.checklistItems];
-          // eslint-disable-next-line functional/immutable-data
           const [movedItem] = newItems.splice(index, 1);
-          // eslint-disable-next-line functional/immutable-data
           newItems.splice(validIndex, 0, movedItem);
 
           return {
@@ -57,24 +55,19 @@ const ChecklistSection = ({
       }
       setDraggingIndex(null);
     },
-    [items.length, setFormData],
+    [items.length, setFormData]
   );
 
   return (
-    <VStack
-      space="sm"
+    <View
       className="mb-20 pb-20"
       style={{
         height: ITEM_HEIGHT * items.length * 1.66,
       }}>
-      <Button size="md" variant="outline" action="secondary" onPress={onAdd}>
-        <ButtonText size="lg" className="text-typography-black dark:text-typography-white">
-          Add Routines
-        </ButtonText>
-        <FontAwesome6 name="add" size={16} color={theme === 'dark' ? '#FFFAEB' : '#051824'} />
-      </Button>
+      <Button onPress={onAdd} title="Add Routines" />
+      <FontAwesome6 name="add" size={16} color={mode === 'dark' ? '#FFFAEB' : '#051824'} />
 
-      <VStack
+      <View
         className="pb-9"
         style={{
           height: ITEM_HEIGHT * items.length,
@@ -92,9 +85,7 @@ const ChecklistSection = ({
             onDragEnd={(translationY) => handleDragEnd(index, translationY)}
           />
         ))}
-      </VStack>
-    </VStack>
+      </View>
+    </View>
   );
-};
-
-export default ChecklistSection;
+}

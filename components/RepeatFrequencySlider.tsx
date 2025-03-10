@@ -1,9 +1,6 @@
-import { Box } from './ui/box';
-import { Center } from './ui/center';
-import { HStack } from './ui/hstack';
-import { Slider, SliderTrack, SliderFilledTrack, SliderThumb } from './ui/slider';
+import { Slider, Text } from '@rneui/themed';
+import { View } from 'react-native';
 
-import { Text } from '~/components/ui/text';
 import { RepeatPeriod } from '~/types';
 import { calculateRepeatText } from '~/utils/tasks/calculateRepeatText';
 
@@ -16,29 +13,21 @@ export const RepeatFrequencySlider = ({
   frequency: number | null;
   onChange: (value: number) => void;
 }>) => (
-  <Box className="mt-4">
-    <HStack space="xl">
+  <View className="mt-4">
+    <View>
       <Text>Repeat Every</Text>
       <Text className="my-auto">{calculateRepeatText(period, frequency as number)}</Text>
-    </HStack>
-    <HStack space="xl">
-      <Center className="m-auto h-1/6 w-4/6">
+    </View>
+    <View>
+      <View className="m-auto h-1/6 w-4/6">
         <Slider
-          className="mt-8"
-          defaultValue={1}
-          minValue={1}
-          maxValue={period === 'Monthly' ? 6 : 15}
-          onChange={onChange}
-          size="lg"
+          value={1}
+          minimumValue={1}
+          maximumValue={period === 'Monthly' ? 6 : 15}
+          onValueChange={onChange}
           orientation="horizontal"
-          isDisabled={false}
-          isReversed={false}>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb />
-        </Slider>
-      </Center>
-    </HStack>
-  </Box>
+        />
+      </View>
+    </View>
+  </View>
 );

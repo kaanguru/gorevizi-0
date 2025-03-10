@@ -1,15 +1,10 @@
-/* eslint-disable functional/immutable-data */
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { useThemeMode, Input } from '@rneui/themed';
 import { useEffect, memo } from 'react';
+import { Pressable, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle, runOnJS } from 'react-native-reanimated';
 
-import { Input, InputField } from './ui/input';
-import { Pressable } from './ui/pressable';
-
-import { Box } from '~/components/ui/box';
-import { HStack } from '~/components/ui/hstack';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
 import { TaskFormData } from '~/types';
 
 const ITEM_HEIGHT = 42;
@@ -35,7 +30,7 @@ const DraggableItem = memo(
     onDragEnd: (translationY: number) => void;
   }>) => {
     const animatedValue = useSharedValue(position * ITEM_HEIGHT);
-    const { theme } = useTheme();
+    const { mode } = useThemeMode();
 
     useEffect(() => {
       animatedValue.value = position * ITEM_HEIGHT;
@@ -63,44 +58,43 @@ const DraggableItem = memo(
     return (
       <GestureHandlerRootView>
         <Animated.View style={animatedStyle}>
-          <Box className="my-1px-2 py-1">
-            <HStack space="sm" className="items-center">
+          <View className="my-1px-2 py-1">
+            <View className="items-center">
               <GestureDetector gesture={panGesture}>
                 <Animated.View>
                   <FontAwesome5
                     name="grip-vertical"
                     size={18}
-                    color={theme === 'dark' ? '#FFFAEB' : '#051824'}
+                    color={mode === 'dark' ? '#FFFAEB' : '#051824'}
                   />
                 </Animated.View>
               </GestureDetector>
-              <Input className="flex-1 bg-white" variant="rounded" size="md">
-                <InputField
-                  placeholder="Checklist item"
-                  value={item.content}
-                  onChangeText={(text) => {
-                    onUpdate(index, text);
-                  }}
-                  className="min-h-[40px] py-2 text-typography-black"
-                  placeholderTextColor="#9CA3AF"
-                  autoFocus
-                />
-              </Input>
+              <Input
+                placeholder="Checklist item"
+                value={item.content}
+                onChangeText={(text) => {
+                  onUpdate(index, text);
+                }}
+                className="text-typography-black min-h-[40px] py-2"
+                placeholderTextColor="#9CA3AF"
+                autoFocus
+              />
+
               <Pressable
-                className="rounded-full bg-background-light p-1 dark:bg-background-dark"
+                className="bg-background-light dark:bg-background-dark rounded-full p-1"
                 onPress={() => onRemove(index)}>
                 <Ionicons
                   name="trash-bin"
                   size={24}
-                  color={theme === 'dark' ? '#FFFAEB' : '#051824'}
+                  color={mode === 'dark' ? '#FFFAEB' : '#051824'}
                 />
               </Pressable>
-            </HStack>
-          </Box>
+            </View>
+          </View>
         </Animated.View>
       </GestureHandlerRootView>
     );
-  },
+  }
 );
 
 export default DraggableItem;

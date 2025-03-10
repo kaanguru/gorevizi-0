@@ -1,5 +1,5 @@
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
 interface CheckBoxProps {
@@ -30,8 +30,8 @@ export default function AnimatedCheckBox({
       key="checkbox"
       style={[
         {
-          width: width,
-          height: height,
+          width,
+          height,
           alignSelf: 'center',
           zIndex: 10,
         },

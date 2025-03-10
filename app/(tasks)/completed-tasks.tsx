@@ -1,37 +1,28 @@
 import { Ionicons } from '@expo/vector-icons';
+import { Card, Button, useThemeMode } from '@rneui/themed';
 import { router } from 'expo-router';
 import { useCallback } from 'react';
-import React, { View, FlatList } from 'react-native';
+import { Text, Pressable, View, FlatList } from 'react-native';
 
 import Header from '~/components/Header';
-import { Button, ButtonIcon } from '~/components/ui/button';
-import { Card } from '~/components/ui/card';
-import { Pressable } from '~/components/ui/pressable';
-import { Text } from '~/components/ui/text';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
 import { Tables } from '~/database.types';
 import { useToggleComplete } from '~/hooks/useTasksMutations';
 import useTasksQueries from '~/hooks/useTasksQueries';
 
 export default function CompletedTasks() {
-  const { theme } = useTheme();
+  const { mode } = useThemeMode();
 
-  const {
-    data: tasks,
-    error: completedTasksError,
-    isLoading,
-    refetch,
-  } = useTasksQueries('completed');
+  const { data: tasks, isLoading, refetch } = useTasksQueries('completed');
   const { mutate: toggleComplete } = useToggleComplete();
 
   const handleMarkIncomplete = useCallback(
     (taskID: number) => toggleComplete({ taskID, isComplete: false }),
-    [],
+    []
   );
 
   function renderItem({ item }: Readonly<{ item: Tables<'tasks'> }>) {
     return (
-      <Card size="lg" variant="outline" className="m-3 bg-background-dark dark:bg-background-light">
+      <Card>
         <Pressable
           onPress={() => {
             router.push({
@@ -41,33 +32,27 @@ export default function CompletedTasks() {
           }}>
           <View className="flex flex-row items-start justify-between">
             <View className="flex-1">
-              <Text bold size="lg" className=" text-typography-gray ">
-                {item.title}
-              </Text>
+              <Text className=" text-typography-gray ">{item.title}</Text>
               {item.notes && (
                 <Text className="mt-1 py-3 text-white dark:text-black">{item.notes}</Text>
               )}
               {item.repeat_period && (
-                <Text size="sm" className="mt-2  text-white dark:text-black">
+                <Text className="mt-2 text-xs text-white dark:text-black">
                   Repeats: {item.repeat_frequency} times {item.repeat_period.toLowerCase()}
                 </Text>
               )}
               {item.updated_at && (
-                <Text size="sm" className="mt-2  text-white dark:text-black">
+                <Text className="mt-2 text-xs text-white dark:text-black">
                   Completed on: {new Date(item.updated_at).toLocaleDateString()}
                 </Text>
               )}
             </View>
-            <Button
-              variant="outline"
-              action="positive"
-              onPress={() => handleMarkIncomplete(item.id)}>
-              <Ionicons
-                name="arrow-undo"
-                size={20}
-                color={theme === 'light' ? '#FFFAEB' : '#051824'}
-              />
-            </Button>
+            <Button onPress={() => handleMarkIncomplete(item.id)} />
+            <Ionicons
+              name="arrow-undo"
+              size={20}
+              color={mode === 'light' ? '#FFFAEB' : '#051824'}
+            />
           </View>
         </Pressable>
       </Card>
@@ -75,7 +60,7 @@ export default function CompletedTasks() {
   }
 
   return (
-    <View className="flex-1 bg-background-light p-4 dark:bg-background-dark">
+    <View className="bg-background-light dark:bg-background-dark flex-1 p-4">
       <Header headerTitle="Completed Tasks" />
       <FlatList
         data={tasks}
@@ -89,7 +74,7 @@ export default function CompletedTasks() {
         contentContainerStyle={{ paddingBottom: 20, paddingEnd: 20 }}
         maxToRenderPerBatch={3}
         windowSize={6}
-        removeClippedSubviews={true}
+        removeClippedSubviews
       />
     </View>
   );

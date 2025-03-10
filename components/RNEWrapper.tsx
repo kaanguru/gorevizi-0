@@ -4,7 +4,7 @@ import { Ubuntu_400Regular, Ubuntu_500Medium, Ubuntu_700Bold } from '@expo-googl
 import { UbuntuMono_400Regular } from '@expo-google-fonts/ubuntu-mono';
 import { Stack, Href, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect, useState, createContext, useContext } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 

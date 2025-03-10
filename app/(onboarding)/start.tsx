@@ -12,17 +12,8 @@ export default function StartScreen() {
       <LogoPortrait />
 
       <View className="w-full space-y-10">
-        <Button
-          title="Register"
-          className=" bg-background-light dark:bg-background-dark my-5 w-full rounded-lg border"
-          onPress={() => router.push('/register')}
-        />
-
-        <Button
-          title="Login"
-          className=" bg-background-primary w-full rounded-lg border"
-          onPress={() => router.push('/login')}
-        />
+        <Button title="Register" onPress={() => router.push('/register')} />
+        <Button title="Login" onPress={() => router.push('/login')} />
       </View>
     </View>
   );

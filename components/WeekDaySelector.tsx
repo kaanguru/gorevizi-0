@@ -1,7 +1,6 @@
-import React from 'react';
-
-import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from './ui/checkbox';
-import { HStack } from './ui/hstack';
+import { CheckBox } from '@rneui/themed';
+import { useEffect } from 'react';
+import { View } from 'react-native';
 
 import { DayOfWeek } from '~/types';
 import getCurrentDayOfWeek from '~/utils/dates/getCurrentDayOfWeek';
@@ -13,7 +12,7 @@ const WeekdaySelector = ({
   selectedDays: DayOfWeek[];
   onDayToggle: (day: DayOfWeek, isSelected: boolean) => void;
 }>) => {
-  React.useEffect(() => {
+  useEffect(() => {
     const currentDay = getCurrentDayOfWeek();
     if (selectedDays.length === 0) {
       onDayToggle(currentDay, true);
@@ -21,20 +20,19 @@ const WeekdaySelector = ({
   }, []);
 
   return (
-    <HStack space="sm" className="flex-wrap">
+    <View className="flex-wrap">
       {(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as DayOfWeek[]).map((day) => (
-        <Checkbox
+        <CheckBox
           key={day}
-          value={day}
-          isChecked={selectedDays.includes(day)}
-          onChange={(isSelected) => onDayToggle(day, isSelected)}>
-          <CheckboxIndicator>
-            <CheckboxIcon />
-          </CheckboxIndicator>
-          <CheckboxLabel>{day}</CheckboxLabel>
-        </Checkbox>
+          checked={selectedDays.includes(day)}
+          onPress={() => {
+            const isSelected = !selectedDays.includes(day); // Toggle the current state
+            onDayToggle(day, isSelected);
+          }}
+          title={day}
+        />
       ))}
-    </HStack>
+    </View>
   );
 };
 

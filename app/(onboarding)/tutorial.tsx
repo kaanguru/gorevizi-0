@@ -45,6 +45,7 @@ export default function TutorialScreen() {
         resizeMode={ResizeMode.CONTAIN}
         shouldPlay
         isMuted
+        rate={0.5}
       />
       <Text className="text-navy-800 mb-2.5 text-2xl font-bold">{item.title}</Text>
     </View>

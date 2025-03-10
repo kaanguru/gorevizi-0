@@ -1,20 +1,9 @@
+import { Button, Input } from '@rneui/themed';
 import { Href, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TextInput, Alert, ActivityIndicator } from 'react-native';
 
-import { Button, ButtonText } from '@/components/ui/button';
-
 import LogoPortrait from '~/components/lotties/LogoPortrait';
-import {
-  FormControl,
-  FormControlError,
-  FormControlErrorText,
-  FormControlHelper,
-  FormControlHelperText,
-  FormControlLabel,
-  FormControlLabelText,
-} from '~/components/ui/form-control';
-import { Input, InputField } from '~/components/ui/input';
 import { useAuth } from '~/utils/auth/auth';
 
 export default function Register() {
@@ -25,8 +14,6 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isInvalidEmail, setIsInvalidEmail] = useState(false);
-  const [isInvalidPass, setIsInvalidPass] = useState(false);
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -35,16 +22,10 @@ export default function Register() {
     }
     setLoading(true);
     if (email.length < 5 || !email.includes('@')) {
-      setIsInvalidEmail(true);
       setLoading(false);
-      return;
     } else if (password.length < 8) {
-      setIsInvalidPass(true);
       setLoading(false);
-      return;
     } else {
-      setIsInvalidEmail(false);
-      setIsInvalidPass(false);
       try {
         const result = await signUpWithEmail(email, password);
         if (result?.error) {
@@ -61,58 +42,34 @@ export default function Register() {
   };
 
   return (
-    <View className="flex-1 bg-background-light px-5 pt-12 dark:bg-background-dark">
+    <View className="bg-background-light dark:bg-background-dark flex-1 px-5 pt-12">
       <LogoPortrait height={200} width={75} />
-      <Text className="mb-8 text-2xl font-bold text-typography-black dark:text-typography-white">
+      <Text className="text-typography-black dark:text-typography-white mb-8 text-2xl font-bold">
         Create Account
       </Text>
       {loading && <ActivityIndicator />}
 
       <View className="space-y-4">
-        <FormControl isInvalid={isInvalidEmail} size="md" isRequired={true}>
-          <FormControlLabel>
-            <FormControlLabelText className={styles.text}>Email</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="mb-7 mt-1" size="lg">
-            <InputField
-              className="bg-background-light py-3"
-              type="text"
-              placeholder="Enter your email"
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-            />
-          </Input>
-          <FormControlError>
-            <FormControlErrorText>Must be an email address</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
+        <Input
+          className="bg-background-light py-3"
+          placeholder="Enter your email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+        />
+
         <View>
-          <FormControl isInvalid={isInvalidPass} size="md" isRequired={true}>
-            <FormControlLabel>
-              <FormControlLabelText className={styles.text}>Password</FormControlLabelText>
-            </FormControlLabel>
-            <Input className="my-1" size="lg">
-              <InputField
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
-            </Input>
-            <FormControlHelper>
-              <FormControlHelperText>Must be at least 8 characters.</FormControlHelperText>
-            </FormControlHelper>
-            <FormControlError>
-              <FormControlErrorText>At least 8 characters are required.</FormControlErrorText>
-            </FormControlError>
-          </FormControl>
+          <Input
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
         </View>
         <View className="mb-8">
           <Text className={styles.text}>Confirm Password</Text>
           <TextInput
-            className="w-full rounded-lg border border-primary-400 bg-background-light px-4 py-3"
+            className="border-primary-400 bg-background-light w-full rounded-lg border px-4 py-3"
             placeholder="Confirm your password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -120,13 +77,18 @@ export default function Register() {
           />
         </View>
 
-        <Button size="md" disabled={loading} className={styles.button} onPress={handleRegister}>
-          <ButtonText className={styles.buttonText}>Register</ButtonText>
-        </Button>
+        <Button
+          title="Register"
+          disabled={loading}
+          className={styles.button}
+          onPress={handleRegister}
+        />
 
-        <Button size="sm" className={styles.button} onPress={() => router.push('/login')}>
-          <ButtonText className={styles.buttonText}>Already have an account? Login</ButtonText>
-        </Button>
+        <Button
+          title="Already have an account? Login"
+          className={styles.button}
+          onPress={() => router.push('/login')}
+        />
       </View>
     </View>
   );

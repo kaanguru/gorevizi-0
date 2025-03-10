@@ -9,9 +9,6 @@ import { useSessionContext } from '~/context/AuthenticationContext';
 export default function DrawerLayout() {
   const { session, isLoading } = useSessionContext();
   const { initialized } = useInitializationContext(); // Use the context
-
-  console.log('Is Hermes running?', typeof HermesInternal);
-
   if (isLoading || !initialized) {
     return (
       <View className="flex-1 justify-center">

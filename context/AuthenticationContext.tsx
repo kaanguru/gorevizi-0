@@ -22,7 +22,6 @@ export function useSessionContext() {
   const context = useContext(SessionContext);
 
   if (!context) {
-    // eslint-disable-next-line functional/no-throw-statements
     throw new Error('useSessionContext must be used within a SessionProvider');
   }
   return context;

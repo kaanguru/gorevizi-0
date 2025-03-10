@@ -1,8 +1,6 @@
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
-import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useColorScheme } from 'react-native';
 
 import { RepeatPeriod } from '~/types';
 
@@ -15,8 +13,6 @@ export default function RepeatPeriodSelector({
   repeatPeriod,
   setRepeatPeriod,
 }: Readonly<RepeatPeriodSelectorProps>) {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
     <View className="my-4" style={styles.container}>
       <Picker

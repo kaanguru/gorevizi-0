@@ -1,40 +1,32 @@
 import { FontAwesome6 } from '@expo/vector-icons';
+import { Button, Text, useThemeMode } from '@rneui/themed';
 import { router } from 'expo-router';
 import React from 'react';
-
-import { Box } from '~/components/ui/box';
-import { Button } from '~/components/ui/button';
-import { HStack } from '~/components/ui/hstack';
-import { Text } from '~/components/ui/text';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
-
+import { View } from 'react-native';
 interface HeaderProps {
   headerTitle: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ headerTitle }) => {
-  const { theme } = useTheme();
+  const { mode } = useThemeMode();
   return (
-    <HStack id="header" space="4xl" className=" mt-1 bg-background-light dark:bg-background-dark">
-      <Box className="mx-1 mb-3 rounded-full bg-background-dark  dark:bg-background-light">
-        <Button size="md" variant="link" onPress={() => router.back()}>
+    <View id="header" className=" bg-background-light dark:bg-background-dark mt-1">
+      <View className="bg-background-dark dark:bg-background-light mx-1 mb-3  rounded-full">
+        <Button size="md" onPress={() => router.back()}>
           <FontAwesome6
             name="arrow-left"
             size={20}
             style={{ padding: 8 }}
-            color={theme === 'light' ? '#FFFAEB' : '#051824'}
+            color={mode === 'light' ? '#FFFAEB' : '#051824'}
           />
         </Button>
-      </Box>
-      <Box className="my-auto">
-        <Text
-          bold
-          size="lg"
-          className="mb-3 font-heading text-typography-black dark:text-typography-white">
+      </View>
+      <View className="my-auto">
+        <Text className="font-heading text-typography-black dark:text-typography-white mb-3">
           {headerTitle}
         </Text>
-      </Box>
-    </HStack>
+      </View>
+    </View>
   );
 };
 

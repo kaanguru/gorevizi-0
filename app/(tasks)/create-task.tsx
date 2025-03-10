@@ -1,19 +1,14 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button, CheckBox } from '@rneui/themed';
 import { useRouter } from 'expo-router';
-import React, { useCallback, useState } from 'react';
-import { Alert, ScrollView } from 'react-native';
+import { useCallback, useState } from 'react';
+import { View, Text, Alert, ScrollView } from 'react-native';
 
 import ChecklistSection from '~/components/ChecklistSection';
 import { FormInput } from '~/components/FormInput';
 import Header from '~/components/Header';
 import { RepeatFrequencySlider } from '~/components/RepeatFrequencySlider';
 import RepeatPeriodSelector from '~/components/RepeatPeriodSelector';
-import { Box } from '~/components/ui/box';
-import { Button, ButtonText } from '~/components/ui/button';
-import { Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel } from '~/components/ui/checkbox';
-import { HStack } from '~/components/ui/hstack';
-import { Text } from '~/components/ui/text';
-import { VStack } from '~/components/ui/vstack';
 import WeekdaySelector from '~/components/WeekDaySelector';
 import { useUpdateHealthAndHappiness } from '~/hooks/useHealthAndHappinessMutations';
 import useHealthAndHappinessQuery from '~/hooks/useHealthAndHappinessQueries';
@@ -37,8 +32,7 @@ export default function CreateTask() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
   const { data: user } = useUser();
-  const { mutate: updateHealthAndHappiness, isPending: isCreatingHealthAndHappiness } =
-    useUpdateHealthAndHappiness();
+  const { mutate: updateHealthAndHappiness } = useUpdateHealthAndHappiness();
   const { data: healthAndHappiness } = useHealthAndHappinessQuery(user?.id);
   const handleCreate = async () => {
     if (!formData.title.trim()) {
@@ -97,10 +91,10 @@ export default function CreateTask() {
     }));
   }, []);
   return (
-    <VStack space="xs" className="flex-1 bg-background-light dark:bg-background-dark">
+    <View className="bg-background-light dark:bg-background-dark flex-1">
       <Header headerTitle="Create Task" />
       <ScrollView className="my-0 px-4">
-        <VStack space="xs">
+        <View>
           <FormInput
             title={formData.title}
             notes={formData.notes}
@@ -123,18 +117,18 @@ export default function CreateTask() {
           )}
 
           {formData.repeatPeriod === 'Weekly' && (
-            <Box className="mt-4 p-2">
-              <HStack space="md" className="mb-4">
+            <View className="mt-4 p-2">
+              <View className="mb-4">
                 <Text className="w-1/6">Repeat Every</Text>
                 <RepeatFrequencySlider
                   period={formData.repeatPeriod}
                   frequency={formData.repeatFrequency}
                   onChange={(value) => setFormData((prev) => ({ ...prev, repeatFrequency: value }))}
                 />
-              </HStack>
-              <HStack space="md">
+              </View>
+              <View>
                 <Text className="mb-2">Repeat on</Text>
-              </HStack>
+              </View>
               <WeekdaySelector
                 selectedDays={formData.repeatOnWk}
                 onDayToggle={(day, isSelected) => {
@@ -146,47 +140,43 @@ export default function CreateTask() {
                   }));
                 }}
               />
-            </Box>
+            </View>
           )}
 
           {formData.repeatPeriod === 'Yearly' && (
-            <Box className="mt-4">
-              <HStack space="md">
+            <View className="mt-4">
+              <View>
                 <Text>Repeat Every Year</Text>
-              </HStack>
-            </Box>
+              </View>
+            </View>
           )}
 
-          <Box className="my-4">
-            <HStack space="md" className="items-center">
-              <Checkbox
-                value="custom-start-date"
-                isChecked={formData.isCustomStartDateEnabled}
-                onChange={(isSelected: boolean) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    isCustomStartDateEnabled: isSelected,
-                    customStartDate: isSelected ? new Date() : null,
-                  }));
-                }}>
-                <CheckboxIndicator>
-                  <CheckboxIcon />
-                </CheckboxIndicator>
-                <CheckboxLabel>Custom Start Date</CheckboxLabel>
-              </Checkbox>
-            </HStack>
-          </Box>
+          <View className="my-4">
+            <View className="items-center">
+              <CheckBox
+                checked={formData.isCustomStartDateEnabled}
+                title="Custom Start Date"
+                onPress={() => {
+                  return (isSelected: boolean) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      isCustomStartDateEnabled: isSelected,
+                      customStartDate: isSelected ? new Date() : null,
+                    }));
+                  };
+                }}
+              />
+            </View>
+          </View>
 
           {formData.isCustomStartDateEnabled && (
-            <Box className="mt-4">
-              <HStack space="xl">
-                <Text className="my-auto text-typography-black">Start Date</Text>
+            <View className="mt-4">
+              <View>
+                <Text className="text-typography-black my-auto">Start Date</Text>
                 <Text className="my-auto">{formData.customStartDate?.toDateString()}</Text>
-                <Button size="xs" variant="outline" onPress={() => setShowDatePicker(true)}>
-                  <ButtonText>Change Date</ButtonText>
-                </Button>
-              </HStack>
-            </Box>
+                <Button onPress={() => setShowDatePicker(true)} title="Change Date" />
+              </View>
+            </View>
           )}
 
           {showDatePicker && (
@@ -209,17 +199,13 @@ export default function CreateTask() {
             onUpdate={handleUpdateChecklistItem}
             setFormData={setFormData}
           />
-        </VStack>
+        </View>
       </ScrollView>
-      <Box className="my-0 px-4">
-        <Button
-          size="lg"
-          onPress={handleCreate}
-          testID="create-task-button"
-          disabled={isCreatingTask}>
-          <ButtonText>{isCreatingTask ? 'Creating...' : 'Create'}</ButtonText>
+      <View className="my-0 px-4">
+        <Button onPress={handleCreate} testID="create-task-button" disabled={isCreatingTask}>
+          title={isCreatingTask ? 'Creating...' : 'Create'}
         </Button>
-      </Box>
-    </VStack>
+      </View>
+    </View>
   );
 }

@@ -1,7 +1,6 @@
-import { Text } from '@rneui/themed';
 import { Href, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { useEffect } from 'react';
+import { Text, Pressable, View } from 'react-native';
 
 import LogoPortrait from '~/components/lotties/LogoPortrait';
 
@@ -17,7 +16,7 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <View className="bg-background-0 flex-1 items-center justify-center">
+    <View className="bg-background-light dark:bg-background-dark flex-1 items-center justify-center">
       <Pressable onPress={() => router.replace('/(onboarding)/tutorial' as Href)}>
         <LogoPortrait />
       </Pressable>

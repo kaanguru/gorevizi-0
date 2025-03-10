@@ -1,8 +1,7 @@
-/* eslint-disable functional/immutable-data */
-//DraggableTaskItem.tsx
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
-import React, { memo } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { Text, CheckBox, useThemeMode } from '@rneui/themed';
+import { memo } from 'react';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Markdown from 'react-native-markdown-display';
 import Animated, {
@@ -13,13 +12,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import AnimatedCheckBox from './lotties/AnimatedCheckBox';
-import { Box } from './ui/box';
-import { Checkbox, CheckboxIndicator } from './ui/checkbox';
-import { Pressable } from './ui/pressable';
+import AnimatedCheckView from './lotties/AnimatedCheckBox';
 
-import { Text } from '~/components/ui/text';
-import { useTheme } from '~/components/ui/ThemeProvider/ThemeProvider';
 import useChecklistItems from '~/hooks/useCheckListQueries';
 import { TaskItemProps } from '~/types';
 import shortenText from '~/utils/shortenText';
@@ -41,7 +35,7 @@ export const TaskItem = memo(
     const isDragging = useSharedValue(false);
 
     const { checkListItemsLength, isCheckListItemsLoading } = useChecklistItems(task.id);
-    const { theme } = useTheme();
+    const { mode } = useThemeMode();
 
     const taskHasChecklistItems = checkListItemsLength > 0;
     const panGesture = Gesture.Pan()
@@ -79,49 +73,40 @@ export const TaskItem = memo(
     };
     return (
       <Animated.View style={animatedStyle}>
-        <Box
+        <View
           style={{ backgroundColor: '#4F10A8' }}
           className="flex h-[94px] flex-row place-content-baseline justify-between gap-3 rounded-lg pe-0 opacity-100">
-          <Checkbox
-            value={task.id.toString()}
-            isChecked={task.is_complete}
-            onChange={handleToggleComplete}
-            size="lg"
-            className="my-auto ms-3">
-            <CheckboxIndicator
-              size="lg"
-              className="h-8 w-8  bg-background-400 text-white dark:bg-background-light">
-              <AnimatedCheckBox height={22} width={22} />
-            </CheckboxIndicator>
-          </Checkbox>
+          <CheckBox
+            checked={task.is_complete}
+            onPress={handleToggleComplete}
+            className="my-auto ms-3"
+          />
+
+          <AnimatedCheckView height={22} width={22} />
 
           <Pressable
             onPress={onPress}
             accessibilityRole="button"
             accessibilityLabel={`Task: ${task.title}`}
             className=" flex grow flex-col">
-            <Box className="my-auto flex-row justify-center  py-2">
-              <Text bold size="lg" className="grow text-typography-white">
-                {task.title}
-              </Text>
+            <View className="my-auto flex-row justify-center  py-2">
+              <Text className="text-typography-white grow">{task.title}</Text>
 
               {taskHasChecklistItems && !isCheckListItemsLoading ? (
                 <>
-                  <Text size="sm" className="me-1 text-typography-white">
-                    {checkListItemsLength}
-                  </Text>
+                  <Text className="text-typography-white me-1">{checkListItemsLength}</Text>
                   <MaterialIcons
                     name="event-repeat"
                     size={16}
-                    color={theme === 'light' ? '#FFFAEB' : '#051824'}
+                    color={mode === 'light' ? '#FFFAEB' : '#051824'}
                   />
                 </>
               ) : (
                 isCheckListItemsLoading && <ActivityIndicator size="small" color="#FF006E" />
               )}
-            </Box>
+            </View>
             {task.notes && (
-              <Box
+              <View
                 style={{ backgroundColor: '#23074B' }}
                 className="absolute bottom-0 left-0 right-1 -z-10 max-h-7 rounded-sm  px-1 py-0 ">
                 <Markdown
@@ -143,23 +128,23 @@ export const TaskItem = memo(
                   }}>
                   {shortenText(task.notes)}
                 </Markdown>
-              </Box>
+              </View>
             )}
           </Pressable>
           {isFiltered && (
             <GestureDetector gesture={panGesture}>
-              <Box className="my-auto h-full w-9 items-center justify-center">
+              <View className="my-auto h-full w-9 items-center justify-center">
                 <FontAwesome5
                   name="grip-vertical"
                   size={18}
-                  color={theme === 'light' ? '#FFFAEB' : '#051824'}
+                  color={mode === 'light' ? '#FFFAEB' : '#051824'}
                 />
-              </Box>
+              </View>
             </GestureDetector>
           )}
-        </Box>
+        </View>
       </Animated.View>
     );
   },
-  areEqual,
+  areEqual
 );
